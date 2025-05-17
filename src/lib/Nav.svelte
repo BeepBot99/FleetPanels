@@ -1,6 +1,13 @@
-<script>
+<script lang="ts">
     import Dropdown from "./Dropdown.svelte";
     import Button from "./Button.svelte";
+    import {type CellSizes, defaults, medium, small} from "./index.svelte";
+
+    interface Props {
+        cellSizes: CellSizes;
+    }
+
+    let {cellSizes = $bindable()}: Props = $props();
 </script>
 
 <nav class="h-10 flex pt-2 px-2 text-white justify-between">
@@ -29,7 +36,19 @@
         </div>
 
         <div class="self-center">
-            <Dropdown title="Saved Views" options={["Default", "hr", "Global Time", "Controller", "Plugins"]}/>
+            <Dropdown onselect={option => {
+                switch (option) {
+                    case "Default":
+                        cellSizes = defaults;
+                        break;
+                    case "Controller":
+                        cellSizes = small;
+                        break;
+                    case "Plugins":
+                        cellSizes = medium;
+                        break;
+                }
+            }} title="Saved Views" options={["Default", "hr", "Global Time", "Controller", "Plugins"]}/>
         </div>
     </div>
     <div class="items-center flex flex-end">

@@ -1,6 +1,7 @@
 <script lang="ts">
     import {onMount, type Snippet} from "svelte";
     import interact from "interactjs";
+    import {moveTo, type PanelLayout} from "./index.svelte";
 
     interface Props {
         left?: boolean;
@@ -14,6 +15,8 @@
         rightDrag?: boolean;
         deltaWidth?: number;
         children: Snippet;
+        panelLayout: PanelLayout;
+        name: string;
     }
 
     let {
@@ -27,7 +30,9 @@
         leftDrag = $bindable(false),
         rightDrag = $bindable(false),
         deltaWidth = $bindable(0),
-        children
+        children,
+        panelLayout = $bindable(),
+        name
     }: Props = $props();
 
     let cell: HTMLDivElement;
@@ -51,12 +56,28 @@
                 },
                 inertia: true
             })
+            .dropzone({
+                accept: ".panel-name",
+                ondropactivate: () => dragging = true,
+                ondropdeactivate: () => {
+                    dragging = false
+                    draggingOver = false
+                },
+                ondragenter: () => draggingOver = true,
+                ondragleave: () => draggingOver = false,
+                ondrop: event => {
+                    moveTo(panelLayout, event.relatedTarget.id.slice("panel-name-".length), name)
+                }
+            })
     })
+
+    let dragging = $state(false);
+    let draggingOver = $state(false);
 </script>
 
 <div bind:this={cell} class:pl-1={left} class:pr-1={right} class:pt-1={top} class:pb-1={bottom}
      class:flex-1={!setOwnHeight}>
-    <div class="rounded-md bg-base-200 h-full p-2 text-white">
+    <div class="rounded-md bg-base-200 h-full p-2 text-white {dragging ? draggingOver ? 'bg-base-300/30' : 'bg-base-300/20' : ''}">
         {@render children()}
     </div>
 </div>

@@ -2,9 +2,13 @@
     interface Props {
         title: string;
         options: string[];
+        onselect?: (option: string) => void;
     }
 
-    let {title, options}: Props = $props();
+    let {
+        title, options, onselect = () => {
+        }
+    }: Props = $props();
 </script>
 
 <div class="relative group">
@@ -22,8 +26,9 @@
                 {#if option === "hr"}
                     <hr class="mx-3 border-white/20 my-0.5"/>
                 {:else}
-                    <li class="block my-0.5 w-30 flex items-center justify-center px-1">
-                        <button class="py-2 cursor-pointer hover:bg-base-100/80 w-full block transition-background duration-200">
+                    <li class="my-0.5 w-30 flex items-center justify-center px-1">
+                        <button onclick={() => onselect(option)}
+                                class="py-2 cursor-pointer hover:bg-base-100/80 w-full block transition-background duration-200">
                             {option}
                         </button>
                     </li>
