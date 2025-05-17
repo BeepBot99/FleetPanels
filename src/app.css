@@ -1,0 +1,8 @@
+@import "tailwindcss";
+@plugin "tailwind-scrollbar";
+
+@theme {
+    --color-base-100: #131314;
+    --color-base-200: #1b1b1b;
+    --color-base-300: #646464
+}
